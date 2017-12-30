@@ -68,6 +68,8 @@
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<input type="number" name="harga_barang"></input>
+               
 				{!! Form::submit( 'Submit', ['class'=>'btn btn-success']) !!}
 			</div>
 			{!! Form::close() !!}
@@ -101,6 +103,9 @@ $(function () {
 	});
 	$("#detail_tran-add-form").validate({
 		
+	});
+	$("[name='kode_barang']").on("change", function(e) { 
+		alert("CARA");
 	});
 });
 </script>

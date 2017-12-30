@@ -24,16 +24,20 @@ class TransController extends Controller
 	public $show_action = true;
 	public $view_col = 'no_faktur';
 	public $listing_cols = ['id', 'no_faktur', 'waktu', 'total'];
+	public $listing = ['id', 'no_faktur', 'kode_barang', 'jumlah', 'subtotal'];
+
 	
 	public function __construct() {
 		// Field Access of Listing Columns
 		if(\Dwij\Laraadmin\Helpers\LAHelper::laravel_ver() == 5.3) {
 			$this->middleware(function ($request, $next) {
 				$this->listing_cols = ModuleFields::listingColumnAccessScan('Trans', $this->listing_cols);
+				$this->listing = ModuleFields::listingColumnAccessScan('Detail_trans', $this->listing);
 				return $next($request);
 			});
 		} else {
 			$this->listing_cols = ModuleFields::listingColumnAccessScan('Trans', $this->listing_cols);
+			$this->listing = ModuleFields::listingColumnAccessScan('Detail_trans', $this->listing);
 		}
 	}
 	
@@ -87,7 +91,7 @@ class TransController extends Controller
 			
 			$insert_id = Module::insert("Trans", $request);
 			
-			return redirect()->route(config('laraadmin.adminRoute') . '.trans.index');
+			return redirect(config('laraadmin.adminRoute') . '/trans/'.$insert_id);
 			
 		} else {
 			return redirect(config('laraadmin.adminRoute')."/");
@@ -107,13 +111,17 @@ class TransController extends Controller
 			$tran = Tran::find($id);
 			if(isset($tran->id)) {
 				$module = Module::get('Trans');
+				$detail = Module::get('Detail_trans');
 				$module->row = $tran;
 				
 				return view('la.trans.show', [
 					'module' => $module,
 					'view_col' => $this->view_col,
 					'no_header' => true,
-					'no_padding' => "no-padding"
+					'no_padding' => "no-padding",
+				'show_actions' => $this->show_action,
+				'listing' => $this->listing,
+				'detail' => $detail
 				])->with('tran', $tran);
 			} else {
 				return view('errors.404', [
@@ -246,4 +254,11 @@ class TransController extends Controller
 		$out->setData($data);
 		return $out;
 	}
+	
+	public function ajax($id)
+	{
+		$values = DB::table('barangs')->select('harga')->where('id',$id)->first();
+		return $values->harga;
+	}
+	
 }

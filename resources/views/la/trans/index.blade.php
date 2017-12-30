@@ -56,13 +56,13 @@
 			{!! Form::open(['action' => 'LA\TransController@store', 'id' => 'tran-add-form']) !!}
 			<div class="modal-body">
 				<div class="box-body">
-                    @la_form($module)
-					
-					{{--
-					@la_input($module, 'no_faktur')
-					@la_input($module, 'waktu')
+					@php
+					$nilai = "FHFFDF00001";
+					@endphp
+					@la_input($module, 'no_faktur', $nilai)
+					@la_input($module, 'waktu', \Carbon\Carbon::now())
 					@la_input($module, 'total')
-					--}}
+					
 				</div>
 			</div>
 			<div class="modal-footer">

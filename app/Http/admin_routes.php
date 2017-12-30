@@ -79,6 +79,7 @@ Route::group(['as' => $as, 'middleware' => ['auth', 'permission:ADMIN_PANEL']], 
 	/* ================== Trans ================== */
 	Route::resource(config('laraadmin.adminRoute') . '/trans', 'LA\TransController');
 	Route::get(config('laraadmin.adminRoute') . '/tran_dt_ajax', 'LA\TransController@dtajax');
+	Route::get(config('laraadmin.adminRoute') . '/trans_ajax/{id}', 'LA\TransController@ajax');
 
 	/* ================== Detail_trans ================== */
 	Route::resource(config('laraadmin.adminRoute') . '/detail_trans', 'LA\Detail_transController');

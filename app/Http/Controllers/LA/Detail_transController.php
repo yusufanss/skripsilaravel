@@ -18,6 +18,8 @@ use Dwij\Laraadmin\Models\Module;
 use Dwij\Laraadmin\Models\ModuleFields;
 
 use App\Models\Detail_tran;
+use App\Models\Barang;
+use App\Models\Tran;
 
 class Detail_transController extends Controller
 {
@@ -87,7 +89,13 @@ class Detail_transController extends Controller
 			
 			$insert_id = Module::insert("Detail_trans", $request);
 			
-			return redirect()->route(config('laraadmin.adminRoute') . '.detail_trans.index');
+			$ubah = Barang::find($request->kode_barang);
+			$ubah->stok = $ubah->stok - $request->jumlah;
+			$ubah->save();
+			$ubah = Tran::find($request->no_faktur);
+			$ubah->total = $ubah->total + $request->jumlah;
+			$ubah->save();
+			return redirect(config('laraadmin.adminRoute') . '/trans/'.$request->no_faktur);
 			
 		} else {
 			return redirect(config('laraadmin.adminRoute')."/");
